@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目管理 - 筑标智胜</title>
+    <style>
+        /* 全局样式重置与基础配置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Arial", "Microsoft YaHei", sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 头部样式 */
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .logo h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        .logo p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .user-info span {
+            font-size: 14px;
+        }
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* 导航栏样式 */
+        .nav {
+            background-color: #34495e;
+            padding: 0 30px;
+        }
+        .nav ul {
+            list-style: none;
+            display: flex;
+        }
+        .nav li {
+            margin-right: 20px;
+        }
+        .nav a {
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .nav a.active,
+        .nav a:hover {
+            background-color: #2c3e50;
+        }
+
+        /* 容器与页面头部样式 */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .page-header h2 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 22px;
+        }
+
+        /* 按钮通用样式 */
+        .create-btn,
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .create-btn:hover,
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        .view-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        .view-btn:hover {
+            background-color: #2980b9;
+        }
+        .generate-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+        .generate-btn:hover {
+            background-color: #219653;
+        }
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* 创建项目表单样式 */
+        .create-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .create-section h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-group input[type="file"] {
+            padding: 8px;
+            border: 1px dashed #ddd;
+            background-color: #f9f9f9;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* 项目卡片列表样式 */
+        .projects-list h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .project-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .project-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .project-card.fade-out {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+        .project-card h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            word-break: break-all;
+        }
+        .project-info {
+            margin: 15px 0;
+        }
+        .project-info p {
+            margin: 8px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .project-info strong {
+            color: #333;
+        }
+        .project-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* 文件列表样式 */
+        .file-list {
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 13px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        .file-name {
+            color: #3498db;
+            text-decoration: none;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .file-name:hover {
+            text-decoration: underline;
+        }
+        .file-size {
+            color: #95a5a6;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        /* 状态标签 */
+        .project-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-active {
+            background-color: #e8f5e8;
+            color: #27ae60;
+        }
+        .status-completed {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        .status-archived {
+            background-color: #f5f5f5;
+            color: #757575;
+        }
+
+        /* 提示信息样式 */
+        .loading,
+        .error-message,
+        .no-projects {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            font-size: 14px;
+        }
+        .loading {
+            color: #666;
+            display: block;
+        }
+        .error-message {
+            color: #e74c3c;
+            display: none;
+        }
+        .no-projects {
+            color: #666;
+            display: none;
+        }
+        .no-projects p:last-child {
+            font-size: 12px;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 页脚样式 */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            margin-top: 50px;
+            border-top: 1px solid #eee;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .user-info {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .nav ul {
+                flex-wrap: wrap;
+            }
+            .nav li {
+                margin-right: 0;
+                width: 50%;
+                text-align: center;
+            }
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                width: 100%;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .project-actions {
+                flex-direction: column;
+            }
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .file-size {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- 头部区域 -->
+<div class="header">
+    <div class="logo">
+        <h1>筑标智胜</h1>
+        <p>建筑行业智能标书生成系统</p>
+    </div>
+    <div class="user-info">
+        <span>欢迎，{{ session.username }}</span>
+        <button class="logout-btn" onclick="logout()">退出登录</button>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<div class="nav">
+    <ul>
+        <li><a href="{{ url_for('bidding.home') }}">首页</a></li>
+        <li><a href="{{ url_for('bidding.qualifications') }}">公司资质管理</a></li>
+        <li><a href="{{ url_for('bidding.projects') }}" class="active">项目管理</a></li>
+        <li><a href="{{ url_for('bidding.bid_generator') }}">标书生成</a></li>
+        <li><a href="{{ url_for('bidding.templates') }}">模板管理</a></li>
+    </ul>
+</div>
+
+<!-- 主内容区域 -->
+<div class="container">
+    <!-- 页面头部 -->
+    <div class="page-header">
+        <h2>项目管理</h2>
+        <button class="create-btn" id="createButton">+ 新建项目</button>
+    </div>
+
+    <!-- 创建项目表单区域 -->
+    <div class="create-section" id="createSection">
+        <h3>新建项目</h3>
+        <form id="createProjectForm">
+            <div class="form-group">
+                <label for="projectName">项目名称 *</label>
+                <input type="text" id="projectName" name="projectName"
+                       placeholder="如：XX大厦建设工程项目" required>
+            </div>
+
+            <div class="form-group">
+                <label for="projectDescription">项目描述</label>
+                <textarea id="projectDescription" name="projectDescription"
+                          placeholder="请输入项目详细描述、要求等信息..." rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="projectStatus">项目状态</label>
+                <select id="projectStatus" name="projectStatus">
+                    <option value="active">进行中</option>
+                    <option value="completed">已完成</option>
+                    <option value="archived">已归档</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="projectFiles">项目相关文件</label>
+                <input type="file" id="projectFiles" name="projectFiles" multiple>
+                <p style="font-size: 12px; color: #666; margin-top: 5px;">支持多种文件格式，可多选</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">创建项目</button>
+                <button type="button" class="btn btn-secondary" id="cancelButton">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 项目列表区域 -->
+    <div class="projects-list">
+        <h3>项目列表</h3>
+        <div class="projects-grid" id="projectsGrid">
+            <!-- 加载提示 -->
+            <div class="loading" id="loadingIndicator">
+                <p>正在加载项目数据...</p>
+            </div>
+            <!-- 错误提示 -->
+            <div class="error-message" id="errorMessage">
+                <p>加载失败，请刷新页面重试</p>
+            </div>
+            <!-- 无项目提示 -->
+            <div class="no-projects" id="noProjectsMessage">
+                <p>暂无项目数据</p>
+                <p>点击上方"新建项目"按钮创建第一个项目</p>
+            </div>
+            <!-- 项目卡片将通过JavaScript动态生成 -->
+        </div>
+    </div>
+</div>
+
+<!-- 页脚 -->
+<div class="footer">
+    <p>© 2024 筑标智胜 版权所有 | 建筑行业智能标书生成系统</p>
+</div>
+
+<!-- 功能脚本 -->
+<script>
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeApp();
+    });
+
+    function initializeApp() {
+        // 绑定事件监听器
+        bindEventListeners();
+
+        // 检查是否显示无数据提示
+        checkNoProjectsMessage();
+
+        // 隐藏加载提示（模拟数据加载完成）
+        setTimeout(() => {
+            document.getElementById('loadingIndicator').style.display = 'none';
+        }, 1000);
+    }
+
+    function bindEventListeners() {
+        const createButton = document.getElementById('createButton');
+        const cancelButton = document.getElementById('cancelButton');
+        const createForm = document.getElementById('createProjectForm');
+
+        if (createButton) {
+            createButton.addEventListener('click', toggleCreateForm);
+        }
+
+        if (cancelButton) {
+            cancelButton.addEventListener('click', toggleCreateForm);
+        }
+
+        if (createForm) {
+            createForm.addEventListener('submit', handleFormSubmit);
+        }
+    }
+
+    function toggleCreateForm() {
+        const createSection = document.getElementById('createSection');
+        const createButton = document.getElementById('createButton');
+
+        if (createSection.style.display === 'block') {
+            createSection.style.display = 'none';
+            createButton.textContent = '+ 新建项目';
+        } else {
+            createSection.style.display = 'block';
+            createButton.textContent = '− 取消创建';
+            // 自动聚焦到第一个输入框
+            document.getElementById('projectName').focus();
+        }
+    }
+
+    function validateForm() {
+        const name = document.getElementById('projectName').value.trim();
+
+        if (!name) {
+            alert('请输入项目名称');
+            return false;
+        }
+
+        if (name.length < 2) {
+            alert('项目名称至少需要2个字符');
+            return false;
+        }
+
+        return true;
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
+
+        const form = this;
+        const submitBtn = form.querySelector('.btn-primary');
+        const originalText = submitBtn.textContent;
+
+        // 禁用按钮，防止重复提交
+        submitBtn.disabled = true;
+        submitBtn.textContent = '创建中...';
+
+        // 模拟创建过程
+        setTimeout(() => {
+            const projectName = document.getElementById('projectName').value;
+            const projectDescription = document.getElementById('projectDescription').value;
+            const projectStatus = document.getElementById('projectStatus').value;
+            const projectFiles = document.getElementById('projectFiles').files;
+
+            // 创建新的项目卡片
+            createProjectCard(projectName, projectDescription, projectStatus, projectFiles);
+
+            // 恢复按钮状态
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+
+            alert('项目创建成功！');
+
+            // 隐藏创建表单并重置
+            toggleCreateForm();
+            form.reset();
+        }, 1500);
+    }
+
+    function createProjectCard(name, description, status, files) {
+        const projectsGrid = document.getElementById('projectsGrid');
+        const newCard = document.createElement('div');
+        newCard.className = 'project-card';
+
+        // 生成项目编号
+        const projectId = generateProjectId();
+        const createDate = getCurrentDate();
+        const statusText = getStatusText(status);
+        const statusClass = getStatusClass(status);
+
+        // 构建文件列表HTML
+        let filesHTML = '';
+        if (files.length > 0) {
+            filesHTML = '<div class="file-list"><strong>相关文件:</strong>';
+            for (let i = 0; i < files.length; i++) {
+                const fileSize = formatFileSize(files[i].size);
+                filesHTML += `
+                    <div class="file-item">
+                        <a href="#" class="file-name" title="${files[i].name}">${files[i].name}</a>
+                        <span class="file-size">${fileSize}</span>
+                    </div>`;
+            }
+            filesHTML += '</div>';
+        }
+
+        newCard.innerHTML = `
+                <span class="project-status ${statusClass}">${statusText}</span>
+                <h3>${name}</h3>
+                <div class="project-info">
+                    <p><strong>项目描述：</strong>${description || '暂无描述'}</p>
+                    <p><strong>项目编号：</strong>${projectId}</p>
+                    <p><strong>创建时间：</strong>${createDate}</p>
+                    ${filesHTML}
+                </div>
+                <div class="project-actions">
+                    <button class="action-btn view-btn">查看详情</button>
+                    <button class="action-btn generate-btn">生成标书</button>
+                    <button class="action-btn delete-btn">删除</button>
+                </div>
+            `;
+
+        // 添加事件监听
+        const deleteBtn = newCard.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', function() {
+            if (confirm('确定要删除这个项目吗？此操作不可恢复。')) {
+                newCard.classList.add('fade-out');
+                setTimeout(() => {
+                    newCard.remove();
+                    checkNoProjectsMessage();
+                }, 300);
+            }
+        });
+
+        const viewBtn = newCard.querySelector('.view-btn');
+        viewBtn.addEventListener('click', function() {
+            showProjectDetails(name, description, projectId, createDate, statusText);
+        });
+
+        const generateBtn = newCard.querySelector('.generate-btn');
+        generateBtn.addEventListener('click', function() {
+            generateBidDocument(name, projectId);
+        });
+
+        // 添加到列表开头
+        projectsGrid.prepend(newCard);
+
+        // 隐藏无数据提示
+        checkNoProjectsMessage();
+    }
+
+    function logout() {
+        if (confirm('确定要退出登录吗？')) {
+            window.location.href = '{{ url_for("auth.logout") }}';
+        }
+    }
+
+    function generateProjectId() {
+        const prefix = "XM";
+        const randomNumber = Math.floor(1000 + Math.random() * 9000);
+        return prefix + randomNumber;
+    }
+
+    function getCurrentDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function getStatusText(status) {
+        const statusMap = {
+            'active': '进行中',
+            'completed': '已完成',
+            'archived': '已归档'
+        };
+        return statusMap[status] || '未知状态';
+    }
+
+    function getStatusClass(status) {
+        const classMap = {
+            'active': 'status-active',
+            'completed': 'status-completed',
+            'archived': 'status-archived'
+        };
+        return classMap[status] || 'status-archived';
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    function checkNoProjectsMessage() {
+        const projectsGrid = document.getElementById('projectsGrid');
+        const noProjectsMessage = document.getElementById('noProjectsMessage');
+        const projectCards = projectsGrid.querySelectorAll('.project-card');
+
+        if (projectCards.length === 0) {
+            noProjectsMessage.style.display = 'block';
+        } else {
+            noProjectsMessage.style.display = 'none';
+        }
+    }
+
+    function showProjectDetails(name, description, id, createDate, status) {
+        const modalHtml = `
+                <div style="padding: 20px; max-width: 500px;">
+                    <h3 style="color: #2c3e50; margin-top: 0;">项目详情</h3>
+                    <p><strong>项目名称：</strong>${name}</p>
+                    <p><strong>项目描述：</strong>${description || '无描述'}</p>
+                    <p><strong>项目编号：</strong>${id}</p>
+                    <p><strong>创建时间：</strong>${createDate}</p>
+                    <p><strong>项目状态：</strong>${status}</p>
+                </div>
+            `;
+
+        if (confirm(modalHtml.replace(/<[^>]*>/g, ''))) {
+            // 用户点击确定后的操作
+        }
+    }
+
+    function generateBidDocument(projectName, projectId) {
+        alert(`正在为项目 "${projectName}" (${projectId}) 生成标书...\n即将跳转到标书生成页面。`);
+        // 实际应用中跳转到标书生成页面
+        window.location.href = `{{ url_for('bidding.bid_generator') }}?project=${encodeURIComponent(projectName)}&id=${projectId}`;
+    }
+</script>
+</body>
+</html>

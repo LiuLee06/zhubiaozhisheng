@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>筑标智胜 - 首页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .logo p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info span {
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .welcome-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .welcome-section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+
+        .feature-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .feature-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <h1>筑标智胜</h1>
+            <p>建筑行业智能标书生成系统</p>
+        </div>
+        <div class="user-info">
+            <span>欢迎，{{ session.username }}</span>
+            <button class="logout-btn" onclick="logout()">退出登录</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h2>系统首页</h2>
+            <p>欢迎使用筑标智胜管理系统，您可以在这里管理公司资质、生成标书等操作。</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>标书生成</h3>
+                <p>根据项目需求和公司资质，智能生成符合要求的标书文档</p>
+                <a class="feature-btn" href="{{ url_for('bidding.bid_generator') }}">立即生成</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🏢</div>
+                <h3>公司资质管理</h3>
+                <p>管理公司的各类资质证书，包括资质等级、有效期等信息</p>
+                <a class="feature-btn" href="{{ url_for('bidding.qualifications') }}">管理资质</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>项目管理</h3>
+                <p>查看和管理参与的项目信息，跟踪项目进度和状态</p>
+                <a class="feature-btn" href="{{ url_for('bidding.projects') }}">查看项目</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📁</div>
+                <h3>模板管理</h3>
+                <p>管理系统中使用的各类标书模板，支持自定义模板</p>
+                <a class="feature-btn" href="{{ url_for('bidding.templates') }}">管理模板</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                // 使用 url_for 生成退出链接
+                window.location.href = "{{ url_for('auth.logout') }}";
+            }
+        }
+    </script>
+</body>
+</html>

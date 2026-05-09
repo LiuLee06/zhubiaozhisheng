@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.file_info.qualification_name }} - 解析结果</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Arial", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.5s ease;
+        }
+
+        .header {
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .info-bar {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            border-left: 4px solid #3498db;
+        }
+
+        .info-item {
+            color: #495057;
+            font-size: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-item strong {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .info-item span {
+            color: #6c757d;
+            font-size: 15px;
+        }
+
+        .content-section {
+            margin: 30px 0;
+        }
+
+        .content-section h2 {
+            color: #2c3e50;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .content-section h2::before {
+            content: "📄";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .parsed-content {
+            background: #fafafa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+            white-space: pre-wrap;
+            max-height: 600px;
+            overflow-y: auto;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.8;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .parsed-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .parsed-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .parsed-content::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 4px;
+        }
+
+        .parsed-content::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+
+        .no-content {
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        /* 动画效果 */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .info-bar {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .parsed-content {
+                padding: 15px;
+                font-size: 14px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .back-btn,
+            .download-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* 状态标签 */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-valid {
+            background: #e8f5e8;
+            color: #27ae60;
+        }
+
+        .status-expired {
+            background: #fde8e6;
+            color: #e74c3c;
+        }
+
+        /* 文件类型标识 */
+        .file-type {
+            display: inline-flex;
+            align-items: center;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页面标题 -->
+        <div class="header">
+            <h1>
+                {{ data.file_info.qualification_name }}
+                <span class="status-badge {{ 'status-valid' if data.file_info.is_valid else 'status-expired' }}">
+                    {{ '有效' if data.file_info.is_valid else '已过期' }}
+                </span>
+            </h1>
+        </div>
+
+        <!-- 资质基本信息 -->
+        <div class="info-bar">
+            <div class="info-item">
+                <strong>资质编号</strong>
+                <span>{{ data.qualification_id }}</span>
+            </div>
+            <div class="info-item">
+                <strong>资质类型</strong>
+                <span>{{ data.file_info.qualification_type_cn }}</span>
+            </div>
+            <div class="info-item">
+                <strong>原文件名</strong>
+                <span>{{ data.file_info.original_name }}</span>
+                <span class="file-type">{{ data.file_info.file_extension|upper }}文件</span>
+            </div>
+            <div class="info-item">
+                <strong>有效期至</strong>
+                <span>{{ data.file_info.expiry_date }}</span>
+            </div>
+            <div class="info-item">
+                <strong>上传时间</strong>
+                <span>{{ data.file_info.upload_date }}</span>
+            </div>
+            <div class="info-item">
+                <strong>解析时间</strong>
+                <span>{{ data.parsed_time }}</span>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>文档解析内容</h2>
+            <div class="parsed-content">
+                {% if data.content %}
+                    {{ data.content }}
+                {% else %}
+                    <div class="no-content">
+                        <p>📷 该文档为图片型文件或加密文件</p>
+                        <p>暂无可提取的文本内容</p>
+                        <p style="margin-top: 15px; font-size: 13px; color: #999;">
+                            支持解析PDF、Word、PPT等文档的文本内容
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+            <a href="{{ url_for('bidding.qualifications') }}" class="back-btn">
+                ← 返回资质管理
+            </a>
+            <a href="#" class="download-btn" onclick="downloadContent()">
+                ⬇️ 下载解析结果
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // 下载解析内容
+        function downloadContent() {
+            const content = document.querySelector('.parsed-content').textContent;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const fileName = '{{ data.file_info.qualification_name }}_解析结果.txt';
+
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('解析结果下载完成！');
+        }
+
+        // 页面加载时的高亮效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为解析内容添加代码高亮（简单版）
+            const contentElement = document.querySelector('.parsed-content');
+            if (contentElement && contentElement.textContent.trim()) {
+                // 可以在这里添加更复杂的高亮逻辑
+                contentElement.innerHTML = contentElement.innerHTML
+                    .replace(/(第[一二三四五六七八九十百千万亿零0-9]+[章节条款项])/g, '<strong style="color: #e74c3c;">$1</strong>')
+                    .replace(/(有效期|截止日期|有效期限)/g, '<strong style="color: #27ae60;">$1</strong>')
+                    .replace(/(\d{4}[-年]\d{1,2}[-月]\d{1,2}日?)/g, '<strong style="color: #3498db;">$1</strong>');
+            }
+        });
+
+        // 复制内容功能
+        function copyContent() {
+            const content = document.querySelector('.parsed-content').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                alert('内容已复制到剪贴板！');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动选择复制');
+            });
+        }
+    </script>
+</body>
+</html>

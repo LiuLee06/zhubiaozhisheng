@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 筑标智胜</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Arial", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* 登录容器样式 */
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.5s ease;
+        }
+
+        /* 登录头部 */
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .login-header p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* 表单组 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #adb5bd;
+        }
+
+        /* 记住我 */
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember-me input {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .remember-me label {
+            margin: 0;
+            color: #666;
+            font-weight: normal;
+        }
+
+        /* 登录按钮 */
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .login-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 登录页脚 */
+        .login-footer {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .login-footer p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .login-footer a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        /* 动画 */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .login-header h1 {
+                font-size: 24px;
+            }
+
+            .form-group input {
+                padding: 10px 12px;
+            }
+
+            .login-btn {
+                padding: 12px;
+            }
+        }
+
+        /* 错误提示 */
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* 加载动画 */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-header">
+        <h1>筑标智胜</h1>
+        <p>建筑行业智能标书生成系统</p>
+    </div>
+
+    <div class="login-form">
+        <form id="loginForm">
+            <input type="hidden" id="csrfToken" name="csrf_token" value="">
+
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+                <div class="error-message" id="usernameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+
+            <div class="remember-me">
+                <input type="checkbox" id="rememberMe" name="rememberMe">
+                <label for="rememberMe">记住账号</label>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginButton">
+                <span class="button-text">立即登录</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="login-footer">
+        <p><a href="{{ url_for('auth.register') }}">新用户注册</a> | <a href="#">忘记密码</a></p>
+        <p>© 2024 筑标智胜 版权所有</p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const rememberMe = document.getElementById('rememberMe').checked;
+        const submitBtn = document.getElementById('loginButton');
+        const buttonText = submitBtn.querySelector('.button-text');
+
+        // 清除之前的错误信息
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.style.display = 'none';
+            el.textContent = '';
+        });
+
+        // 显示加载状态
+        submitBtn.disabled = true;
+        const originalText = buttonText.textContent;
+        buttonText.innerHTML = '<span class="loading-spinner"></span>登录中...';
+
+        try {
+            const response = await fetch('{{ url_for("auth.api_login") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    username: formData.get('username'),
+                    password: formData.get('password'),
+                    rememberMe: rememberMe
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // 登录成功
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    window.location.href = '{{ url_for("bidding.home") }}';
+                }
+            } else {
+                // 登录失败
+                showError(data.message || '登录失败');
+                resetButton(submitBtn, buttonText, originalText);
+            }
+        } catch (error) {
+            console.error('登录错误:', error);
+            showError('网络错误，请检查后端服务是否启动');
+            resetButton(submitBtn, buttonText, originalText);
+        }
+    });
+
+    function showError(message) {
+        // 可以在这里根据错误类型显示在特定的错误位置
+        const errorDiv = document.getElementById('passwordError') || document.createElement('div');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        if (!errorDiv.parentNode) {
+            document.querySelector('.login-form').appendChild(errorDiv);
+        }
+    }
+
+    function resetButton(button, textElement, originalText) {
+        button.disabled = false;
+        textElement.textContent = originalText;
+    }
+
+    // 输入验证
+    document.getElementById('username').addEventListener('blur', function() {
+        if (!this.value.trim()) {
+            showFieldError('usernameError', '请输入用户名');
+        }
+    });
+
+    document.getElementById('password').addEventListener('blur', function() {
+        if (!this.value.trim()) {
+            showFieldError('passwordError', '请输入密码');
+        }
+    });
+
+    function showFieldError(fieldId, message) {
+        const errorElement = document.getElementById(fieldId);
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+    }
+
+    // 页面加载时检查登录状态
+    document.addEventListener('DOMContentLoaded', function() {
+        // 检查本地存储的记住我功能
+        const rememberedUsername = localStorage.getItem('rememberedUsername');
+        if (rememberedUsername) {
+            document.getElementById('username').value = rememberedUsername;
+            document.getElementById('rememberMe').checked = true;
+        }
+
+        // 如果已经登录，跳转到首页
+        fetch('{{ url_for("bidding.home") }}')
+            .then(response => {
+                if (response.redirected) return { authenticated: false };
+                return response.json();
+            })
+            .then(data => {
+                if (data.authenticated) {
+                    window.location.href = '{{ url_for("bidding.home") }}';
+                }
+            })
+            .catch(error => console.log('检查登录状态失败，可能未登录'));
+    });
+</script>
+</body>
+</html>

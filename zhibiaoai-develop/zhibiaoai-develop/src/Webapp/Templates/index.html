@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>筑标智胜 - 建筑行业智能标书生成系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4a4a4a;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .status {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 25px 0;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #5a6fd5;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>筑标智胜</h1>
+        <p>建筑行业智能标书生成系统</p>
+
+        <div class="status">
+            <p><strong>状态:</strong> Flask服务器运行中</p>
+            <p><strong>地址:</strong> http://127.0.0.1:5000</p>
+            <p><strong>调试模式:</strong> 开启</p>
+        </div>
+
+        <p>系统已成功启动，您现在可以访问以下功能：</p>
+
+        <div class="btn-group">
+            <a href="{{ url_for('auth.login') }}" class="btn">用户登录</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-secondary">用户注册</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 筑标智胜 版权所有 | Flask服务器运行中</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+Flask
+flask-cors
+flask-sqlalchemy
+flask-wtf
+pymysql
+PyPDF2
+python-docx
+requests
+wtforms
+email-validator
+
